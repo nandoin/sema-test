@@ -4,7 +4,7 @@
 
 ```bash
 Cria 2 buckets
-* 1 conforme input do github actions (bucket para pos processamento)
+* 1 conforme input github actions (bucket para pos processamento)
 * 1 pre definido em variables.tf (bucket para pre processamento)
 
 Cria EMR para processamento de dados
