@@ -1,0 +1,42 @@
+---
+name: Create-Resources-Terraform
+on:
+  workflow_dispatch:
+    inputs:
+      nome_bucket_clean:
+        description: 'insira o nome do bucket clean'
+        required: true
+        default: ''
+        type: string
+      regiao_deploy_terraform:
+        description: 'insira a regiao para deploy da receita'
+        required: true
+        default: ''
+        type: string
+jobs:
+  terraform_apply:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        #terraform_version: 1.4.0
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+    - name: Terraform Format
+      id: fmt
+      run: terraform fmt -check
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+
+    - name: Apply Terraform
+      run: terraform apply -auto-approve -var "region_aws=${{ inputs.regiao_deploy_terraform }}" -var "bucket_name_clean=${{ inputs.nome_bucket_clean }}"
